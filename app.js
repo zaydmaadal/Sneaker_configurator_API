@@ -10,6 +10,19 @@ const indexRouter = require("./routes/index");
 const usersRouter = require("./routes/users");
 const ordersRouter = require("./routes/api/v1/orders");
 
+async function connect() {
+  try {
+    await mongoose.connect(
+      "mongodb+srv://zaydmaadal:zaydolas74@sneaker-configurator.p8sxh.mongodb.net/"
+    );
+    console.log("Connected to MongoDB");
+  } catch (error) {
+    console.error("Could not connect to MongoDB", error);
+  }
+}
+
+connect().catch(console.error);
+
 const app = express();
 
 app.use(cors());
