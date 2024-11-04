@@ -7,7 +7,7 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 
 const indexRouter = require("./routes/index");
-const usersRouter = require("./routes/users");
+const usersRouter = require("./routes/api/v1/users");
 const ordersRouter = require("./routes/api/v1/orders");
 
 async function connect() {
@@ -34,7 +34,7 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use("/api/v1/orders", ordersRouter);
 
 app.use("/", indexRouter);
-app.use("/users", usersRouter);
+app.use("/api/v1/users", usersRouter);
 
 //console log link to the API
 console.log("API is running on http://localhost:3000");
