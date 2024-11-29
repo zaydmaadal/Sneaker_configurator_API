@@ -3,8 +3,6 @@ const config = require("../config/orderConfig");
 
 const checkAuth = (req, res, next) => {
   const token = req.headers.authorization;
-  console.log("Received Token:", token);
-
   if (!token) {
     return res.status(401).json({
       status: "error",
