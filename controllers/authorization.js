@@ -26,7 +26,7 @@ const login = (req, res, next) => {
               username: user[0].username,
               userId: user[0]._id,
             },
-            config.passwordToken,
+            config.passwordToken || proces.env.passwordToken,
             {
               expiresIn: "1h",
             }
