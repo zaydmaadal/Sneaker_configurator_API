@@ -2,15 +2,23 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const OrderSchema = new Schema({
-  color: {
+  outsideColor: {
+    type: String,
+    required: true,
+  },
+    lacesColor: {
+    type: String,
+    required: true,
+  },
+  soleColor: {
+    type: String,
+    required: true,
+  },
+  logo: {
     type: String,
     required: true,
   },
   size: {
-    type: String,
-    required: true,
-  },
-  lacesColor: {
     type: String,
     required: true,
   },
