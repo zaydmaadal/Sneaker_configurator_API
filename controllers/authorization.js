@@ -198,4 +198,4 @@ const signup = (req, res, next) => {
     });
 };
 
-module.exports = { login, signup };
+module.exports = { login, signup, changePassword };
