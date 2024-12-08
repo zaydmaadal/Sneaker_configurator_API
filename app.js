@@ -5,6 +5,8 @@ const logger = require("morgan");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const mongoose = require("mongoose");
+const http = require("http");
+const { Server } = require("socket.io");
 
 const indexRouter = require("./routes/index");
 const usersRouter = require("./routes/api/v1/users");
@@ -24,6 +26,13 @@ async function connect() {
 connect().catch(console.error);
 
 const app = express();
+const server = http.createServer(app);
+const io = new Server(server, {
+  cors: {
+    origin: "*", // Of specificeer je frontend-URL
+    methods: ["GET", "POST", "PUT", "DELETE"],
+  },
+});
 
 app.use(cors());
 app.use(logger("dev"));
@@ -35,6 +44,21 @@ app.use("/api/v1/orders", ordersRouter);
 
 app.use("/", indexRouter);
 app.use("/api/v1/users", usersRouter);
+
+// WebSocket-logica
+io.on("connection", (socket) => {
+  console.log("A user connected");
+
+  // Luister naar een aangepast event
+  socket.on("order-updated", (data) => {
+    console.log("Order updated:", data);
+    io.emit("order-updated", data); // Stuur de update naar alle clients
+  });
+
+  socket.on("disconnect", () => {
+    console.log("A user disconnected");
+  });
+});
 
 //console log link to the API
 console.log("API is running on http://localhost:3000");
