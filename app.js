@@ -8,45 +8,32 @@ const mongoose = require("mongoose");
 const http = require("http");
 const { Server } = require("socket.io");
 
+const indexRouter = require("./routes/index");
+const usersRouter = require("./routes/api/v1/users");
+const ordersRouter = require("./routes/api/v1/orders");
+
+async function connect() {
+  try {
+    await mongoose.connect(
+      "mongodb+srv://zaydmaadal:zaydolas74@sneaker-configurator.p8sxh.mongodb.net/"
+    );
+    console.log("Connected to MongoDB");
+  } catch (error) {
+    console.error("Could not connect to MongoDB", error);
+  }
+}
+
+connect().catch(console.error);
+
 const app = express();
-
-// Configure CORS properly
-const allowedOrigins = [
-  "http://localhost:3001", // Your Next.js frontend
-  "http://localhost:5173", // Your Vite/React frontend
-  "https://your-production-domain.com", // Add production domain
-];
-
-const corsOptions = {
-  origin: function (origin, callback) {
-    // Allow requests with no origin (like mobile apps or curl requests)
-    if (!origin) return callback(null, true);
-
-    if (
-      allowedOrigins.indexOf(origin) !== -1 ||
-      origin.includes("your-vercel-app")
-    ) {
-      callback(null, true);
-    } else {
-      callback(new Error("Not allowed by CORS"));
-    }
-  },
-  credentials: true,
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"],
-};
-
-// Apply CORS to regular HTTP routes
-app.use(cors(corsOptions));
-
-// Socket.IO needs separate CORS config
+const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: allowedOrigins, // Don't use '*' in production!
+    origin: "*", // Of specificeer je frontend-URL
     methods: ["GET", "POST", "PUT", "DELETE"],
-    credentials: true,
   },
 });
+
 app.use(cors());
 app.use(logger("dev"));
 app.use(express.json());
